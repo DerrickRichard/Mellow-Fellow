@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mellow Fellow | Llama 3.1</title>
+    <title>Mellow Fellow | Private Inference</title>
     <!-- CensorCore Library -->
     <script src="https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@latest/CensorCore.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600&family=JetBrains+Mono&display=swap" rel="stylesheet">
@@ -14,10 +14,10 @@
             --border: #222222;
             --text: #ffffff;
             --text-dim: #666666;
-            --accent: #8b5cf6; /* Violet */
-            --accent-glow: rgba(139, 92, 246, 0.3);
-            --user-bubble: #1a1a1a;
-            --danger: #ef4444;
+            --accent: #10b981; 
+            --accent-glow: rgba(16, 185, 129, 0.2);
+            --user-bubble: #161616;
+            --danger: #ff4b4b;
         }
 
         * { box-sizing: border-box; }
@@ -47,18 +47,19 @@
             justify-content: space-between;
             align-items: flex-end;
             padding: 20px 0;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 2px solid var(--border);
             margin-bottom: 20px;
         }
 
-        .brand h1 { margin: 0; font-size: 1.5rem; letter-spacing: -1px; }
+        .brand h1 { margin: 0; font-size: 1.4rem; letter-spacing: 1px; font-weight: 600; }
         .model-tag { 
             font-family: 'JetBrains Mono', monospace;
-            font-size: 0.75rem; 
+            font-size: 0.7rem; 
             color: var(--accent);
-            background: var(--accent-glow);
-            padding: 2px 8px;
-            border-radius: 4px;
+            border: 1px solid var(--accent);
+            padding: 1px 6px;
+            border-radius: 2px;
+            margin-left: 10px;
         }
 
         #chat-container {
@@ -66,87 +67,83 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 24px;
+            gap: 20px;
             padding-right: 10px;
         }
 
-        .msg-row { display: flex; flex-direction: column; max-width: 85%; }
+        .msg-row { display: flex; flex-direction: column; max-width: 80%; }
         .msg-row.user { align-self: flex-end; align-items: flex-end; }
         .msg-row.ai { align-self: flex-start; }
         .msg-row.system { align-self: center; text-align: center; max-width: 100%; }
 
         .bubble {
-            padding: 14px 18px;
-            border-radius: 12px;
-            line-height: 1.6;
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
             font-size: 0.95rem;
+            border: 1px solid var(--border);
         }
 
-        .user .bubble { background: var(--accent); color: white; border-bottom-right-radius: 2px; }
-        .ai .bubble { background: var(--user-bubble); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
-        .system .bubble { background: transparent; color: var(--text-dim); border: 1px dashed var(--border); font-size: 0.8rem; }
-        .blocked .bubble { border-color: var(--danger); color: var(--danger); }
+        .user .bubble { background: var(--user-bubble); border-color: var(--accent); color: white; }
+        .ai .bubble { background: var(--surface); color: var(--text); }
+        .system .bubble { background: transparent; color: var(--text-dim); border: 1px dashed var(--border); font-size: 0.75rem; font-family: 'JetBrains Mono'; }
+        .blocked .bubble { border-color: var(--danger); color: var(--danger); background: rgba(255, 75, 75, 0.05); }
 
-        .meta { font-size: 0.7rem; color: var(--text-dim); margin-top: 6px; font-family: 'JetBrains Mono'; }
+        .meta { font-size: 0.65rem; color: var(--text-dim); margin-top: 5px; font-family: 'JetBrains Mono'; text-transform: uppercase; }
 
         .input-section {
-            padding: 20px 0;
+            padding: 24px 0;
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
 
         .input-wrapper {
-            position: relative;
             display: flex;
             background: var(--surface);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 8px;
-            transition: border-color 0.3s ease;
+            border-radius: 4px;
+            padding: 4px;
         }
-
-        .input-wrapper:focus-within { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
 
         input {
             flex: 1;
             background: transparent;
             border: none;
             color: white;
-            padding: 12px;
-            font-size: 1rem;
+            padding: 10px 14px;
+            font-size: 0.95rem;
             outline: none;
             font-family: 'Space Grotesk';
         }
 
         button {
-            background: var(--text);
+            background: var(--accent);
             color: var(--bg);
             border: none;
-            padding: 0 20px;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 0 24px;
+            border-radius: 2px;
+            font-weight: 700;
             cursor: pointer;
-            transition: transform 0.1s;
+            font-family: 'JetBrains Mono';
         }
 
-        button:active { transform: scale(0.95); }
-        button:disabled { opacity: 0.2; cursor: not-allowed; }
+        button:disabled { opacity: 0.3; cursor: not-allowed; }
 
         .footer-info {
             display: flex;
             justify-content: space-between;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             color: var(--text-dim);
-            padding: 0 5px;
-            line-height: 1.4;
+            font-family: 'JetBrains Mono';
+            line-height: 1.6;
         }
 
-        .disclaimer { max-width: 60%; }
+        .disclaimer { max-width: 65%; }
         .limits { text-align: right; }
 
-        @keyframes pulse { 50% { opacity: 0.5; } }
-        .loading { animation: pulse 1.5s infinite; color: var(--accent); font-family: 'JetBrains Mono'; font-size: 0.8rem; }
+        @keyframes scan { from { opacity: 1; } to { opacity: 0.4; } }
+        .loading { animation: scan 0.8s infinite alternate; color: var(--accent); font-family: 'JetBrains Mono'; font-size: 0.75rem; margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -154,54 +151,95 @@
 <div class="app-wrapper">
     <div class="header">
         <div class="brand">
-            <h1>MELLOW FELLOW</h1>
-            <span class="model-tag">MODEL: LLAMA-3.1-8B-INSTANT</span>
+            MELLOW FELLOW <span class="model-tag">LLAMA-3.1-8B</span>
         </div>
-        <div id="status" class="meta">SYSTEM STATUS: LOADING...</div>
+        <div id="status" class="meta">INIT_SEQUENCE...</div>
     </div>
 
     <div id="chat-container">
         <div class="msg-row ai">
-            <div class="bubble">Secure link established. CensorCore filtering is active. Awaiting instruction.</div>
+            <div class="bubble">System bypass protection active. Using dynamic fuzzy analysis.</div>
         </div>
     </div>
 
-    <div id="loader" class="loading" style="display: none; padding: 10px 0;">EXECUTING INFERENCE...</div>
+    <div id="loader" class="loading" style="display: none;">[ INFERENCE_IN_PROGRESS ]</div>
 
     <div class="input-section">
         <div class="input-wrapper">
-            <input type="text" id="user-input" placeholder="Enter command..." autocomplete="off">
+            <input type="text" id="user-input" placeholder="Type instruction..." autocomplete="off">
             <button id="send-btn" onclick="execute()" disabled>SEND</button>
         </div>
         
         <div class="footer-info">
             <div class="disclaimer">
-                <strong>NOTICE:</strong> AI-generated content may be inaccurate. <strong>CensorCore</strong> filtering enabled to prevent policy violations.
+                <strong>DISCLAIMER:</strong> AI may produce inaccurate outputs. <b>Fuzzy Filtering</b> is integrated with CensorCore's database to prevent policy bypass via character manipulation.
             </div>
             <div class="limits">
                 <strong>GLOBAL LIMIT:</strong> 30 RPM<br>
-                Shared across all active sessions.
+                Shared across all users.
             </div>
         </div>
     </div>
 </div>
 
 <script>
+    // --- DYNAMIC FUZZY FILTER CONFIG ---
+    const SAFE_WORDS = ['bigger', 'class', 'grass', 'glass', 'night', 'knight', 'bit', 'button', 'assist'];
+    let globalBlockedWords = [];
+
+    // Initialize fuzzy list by fetching the same wordlist CensorCore uses
+    fetch("https://cdn.jsdelivr.net/gh/DerrickRichard/CensorCore-Library@main/wordlist.json")
+        .then(res => res.json())
+        .then(data => {
+            for (const list of Object.values(data)) {
+                if (Array.isArray(list)) globalBlockedWords.push(...list);
+            }
+        });
+
+    function getLevenshteinDistance(a, b) {
+        if (a.length === 0) return b.length;
+        if (b.length === 0) return a.length;
+        const matrix = [];
+        for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+        for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+        for (let i = 1; i <= b.length; i++) {
+            for (let j = 1; j <= a.length; j++) {
+                if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                    matrix[i][j] = matrix[i - 1][j - 1];
+                } else {
+                    matrix[i][j] = Math.min(matrix[i - 1][j - 1] + 1, Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1));
+                }
+            }
+        }
+        return matrix[b.length][a.length];
+    }
+
+    function isFuzzyMatch(userInput) {
+        const words = userInput.toLowerCase().split(/\s+/);
+        for (const word of words) {
+            // Check safe exceptions
+            if (SAFE_WORDS.includes(word)) continue;
+
+            for (const blocked of globalBlockedWords) {
+                const distance = getLevenshteinDistance(word, blocked);
+                // Flag if 1 character away (typo protection) for words longer than 3 chars
+                if (distance <= 1 && word.length > 3) return true;
+                if (distance === 0) return true;
+            }
+        }
+        return false;
+    }
+
+    // --- UI LOGIC ---
     const container = document.getElementById('chat-container');
     const input = document.getElementById('user-input');
     const btn = document.getElementById('send-btn');
     const loader = document.getElementById('loader');
     const status = document.getElementById('status');
 
-    // Wait for CensorCore to be ready
     censor.onReady(() => {
-        status.textContent = "SYSTEM STATUS: OPERATIONAL";
+        status.textContent = "STATUS: OPERATIONAL";
         btn.disabled = false;
-    });
-
-    censor.onError(() => {
-        status.textContent = "SYSTEM STATUS: FILTER_ERROR";
-        status.style.color = "var(--danger)";
     });
 
     input.addEventListener('keypress', (e) => { if(e.key === 'Enter') execute(); });
@@ -210,10 +248,12 @@
         const text = input.value.trim();
         if(!text) return;
 
-        // Perform Pre-Inference Censorship
+        // 1. Direct and 2. Fuzzy Checks
         const analysis = censor.analyze(text);
-        if(analysis.blocked) {
-            appendPulse('system blocked', `SECURITY_ALERT: Input blocked (Rule: ${analysis.category}). Instruction discarded.`);
+        const fuzzyBlocked = isFuzzyMatch(text);
+
+        if(analysis.blocked || fuzzyBlocked) {
+            appendPulse('system blocked', `[ALERT] Input violates safety protocols (Fuzzy Filter Triggered).`);
             input.value = '';
             return;
         }
@@ -229,18 +269,15 @@
                 body: JSON.stringify({ message: text })
             });
             const data = await res.json();
-            
             const reply = data.reply || data.error;
             
-            // Perform Post-Inference Censorship on AI Output
-            if(censor.isBlocked(reply)) {
-                appendPulse('system blocked', "POLICE_ALERT: AI output intercepted and redacted due to safety violation.");
+            if(censor.isBlocked(reply) || isFuzzyMatch(reply)) {
+                appendPulse('system blocked', "[REDACTED] Output intercepted due to safety violations.");
             } else {
                 appendPulse('ai', reply);
             }
-
         } catch (e) {
-            appendPulse('system', "CRITICAL_ERROR: Connection failed.");
+            appendPulse('system', "[ERR] Connection timeout.");
         } finally {
             toggleState(false);
         }
@@ -251,7 +288,7 @@
         row.className = `msg-row ${type}`;
         row.innerHTML = `
             <div class="bubble">${content}</div>
-            <div class="meta">${type.split(' ')[0].toUpperCase()} // ${new Date().toLocaleTimeString()}</div>
+            <div class="meta">${type.split(' ')[0]} // ${new Date().toLocaleTimeString()}</div>
         `;
         container.appendChild(row);
         container.scrollTop = container.scrollHeight;
